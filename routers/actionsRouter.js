@@ -50,33 +50,25 @@ router.get('/:id', (req, res) =>{
         res.status(500).json({ error: "The comment information could not be retrieved." })
     })
 })
-// router.post('/', (req, res)=>{
-//     const actionInfo = req.body;
-//     actionInfo.project_id && actionInfo.description ?  db.insert(actionInfo).then(newPost =>{
-//         res.status(201).json(actionInfo);
-//     }) : res.status(400).json({ errorMessage: "Please provide a name and description for the project." })
-   
-//     .catch(err =>{
-//         res.status(500).json({ error: "There was an error while saving the project to the database" })
-//     })
-// })
+
 
 router.post('/', (req, res)=>{
     const actionInfo = req.body;
 
-if(actionInfo.project_id && actionInfo.description){
+if(actionInfo.project_id && actionInfo.description && actionInfo.notes){
     if(projectDb.get(actionInfo.project_id)){
-        actionDb.insert(actionInfo).then(newPost =>{
-            res.status(201).json(actionInfo);
+        actionDb.insert(actionInfo)
+        .then(newAction =>{
+            res.status(201).json(newAction);
         }) 
         .catch(err =>{
-            res.status(500).json({ error: "There was an error while saving the project to the database" })
+            res.status(500).json({ error: "There was an error while saving the action to the database" })
         })
     } else {
         res.status(400).json({message: "A project with that project id does not exist"})
     }
 } else{
-    res.status(400).json({ errorMessage: "Please provide a project id and description for the project." })
+    res.status(400).json({ errorMessage: "Please provide a project id, description, and notes for the project." })
 }
   
    
